@@ -1,1 +1,385 @@
+<!DOCTYPE html>
+<html>
+    <title>OpenWindows</title>
+<body>
+    <canvas id="desktop" width="1152" height="900" style="background:rgb(91, 158, 189);image-rendering: pixelated;">
+        Sorry, your browser does not support canvas.
+    </canvas>
+    <script>
+        const canvas = document.getElementById('desktop');
+        const ctx = canvas.getContext('2d')
 
+
+        // Disable anti-aliasing to preserve sharp pixel edges
+        ctx.imageSmoothingEnabled = false;
+
+        const backgroundColor = 'rgb(204, 204, 204)';
+        const frameColor = 'rgb(0, 0, 0)';
+        const black = 'rgb(0, 0, 0)';
+        const white = 'rgb(255, 255, 255)';
+
+        const fontColor = 'rgb(0, 0, 0)';
+        
+        const gray1 = 'rgb(244, 244, 244)';
+        const gray2 = 'rgb(204, 204, 204)';
+        const gray3 = 'rgb(182, 182, 182)';
+        const gray4 = 'rgb(102, 102, 102)';
+        
+        function drawLine(x1, y1, x2, y2, color) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+
+        function drawArrow(x, y) {
+            drawLine(x + 0.5,     y + 0.5,      x + 7 + 0.5,  y + 0.5,      gray4);
+            drawLine(x + 0.5, y + 0.5, x + 4 + 0.5, y + 6 + 0.5, gray4);
+            drawLine(x + 7 + 0.5, y + 0.5, x + 4 + 0.5, y + 6 + 0.5, gray1);
+        }
+
+        function drawBox(x, y, width, height) {
+            // top
+            drawLine(x + 1 + 0.5, y + 0.5, x + width - 1 + 0.5, y + 0.5, gray1);
+            // right
+            drawLine(x + width + 0.5, y + 1 + 0.5, x + width + 0.5, y + height - 1 + 0.5, gray4);
+            // left
+            drawLine(x + 0.5, y + 1 + 0.5, x + 0.5, y + height - 1 + 0.5, gray1);
+            // bottom
+            drawLine(x + 1 + 0.5, y + height + 0.5, x + width - 1 + 0.5, y + height + 0.5, gray4);
+        }
+
+        function drawFrameBackground(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+            ctx.stroke();
+        }
+
+        function drawFrame(x, y, width, height, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.rect(x, y, width, height);
+            ctx.stroke();
+        }
+
+        function drawAncorTopLeft(x, y) {
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(x, y, 11, 11);
+            ctx.stroke()
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 0.5, y + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 0.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray1;
+            ctx.stroke();
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 11 + 0.5, y + 1 + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 5 + 0.5);
+
+            ctx.lineTo(x + 5 + 0.5, y + 5 + 0.5);
+            ctx.lineTo(x + 5 + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 0 + 0.5, y + 11 + 0.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray4;
+            ctx.stroke();
+        }
+
+        function drawAncorTopRight(x, y) {
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(x, y, 11, 11);
+            ctx.stroke()
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 0.5, y + 5.5);
+            ctx.lineTo(x + 0.5, y + 0.5);
+            ctx.lineTo(x + 11.5, y + 0.5);
+
+            ctx.moveTo(x + 7.5, y + 6.5);
+            ctx.lineTo(x + 7.5, y + 11.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray1;
+            ctx.stroke();
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 11.5, y + 1.5);
+            ctx.lineTo(x + 11.5, y + 11.5);
+            ctx.lineTo(x + 5.5, y + 11.5);
+
+            ctx.moveTo(x + 1.5, y + 5.5);
+            ctx.lineTo(x + 7.5, y + 5.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray4;
+            ctx.stroke();
+        }        
+
+        function drawAncorBottomLeft(x, y) {
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(x, y, 11, 11);
+            ctx.stroke()
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 0.5, y + 0.5);
+            ctx.lineTo(x + 5 + 0.5, y + 0.5);
+
+            ctx.moveTo(x + 6 + 0.5, y + 7 + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 7 + 0.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray1;
+            ctx.stroke();
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 1 + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 7 + 0.5);
+
+            ctx.moveTo(x + 5 + 0.5, y + 1 + 0.5);
+            ctx.lineTo(x + 5 + 0.5, y + 7 + 0.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray4;
+            ctx.stroke();
+        }
+
+        function drawAncorBottomRight(x, y) {
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(x, y, 11, 11);
+            ctx.stroke()
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 0.5, y + 7 + 0.5);
+            ctx.lineTo(x + 0.5 + 7, y + 7 + 0.5);
+            ctx.lineTo(x + 7 + 0.5, y + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 0.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray1;
+            ctx.stroke();
+
+            // ---------------------------------
+
+            ctx.beginPath();
+            ctx.moveTo(x + 11 + 0.5, y + 1 + 0.5);
+            ctx.lineTo(x + 11 + 0.5, y + 11 + 0.5);
+            ctx.lineTo(x + 1 + 0.5, y + 11 + 0.5);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray4;
+            ctx.stroke();
+        }
+
+        function drawAncors(x, y, width, height)
+        {
+            drawAncorBottomRight(x + width - 11, y + height - 11);
+            drawAncorTopLeft(x - 1, y - 1);
+            drawAncorTopRight(x + width - 11, y - 1);
+            drawAncorBottomLeft(x - 1, y + height - 11);
+            // Bug - redrawing works
+            drawAncorBottomRight(x + width - 11, y + height - 11);    
+        }
+
+        function drawSeparator(x, y, width, height) {
+            drawLine(x + 5, y + 27.5, width, y + 27.5, black);
+        }
+
+        function drawButtonLeftEdge(x, y) {
+            ctx.fillStyle = gray1;
+
+            // line 2
+            ctx.fillRect(x + 6, y + 2, 1, 1);
+            ctx.fillRect(x + 5, y + 2, 1, 1);
+            // line 3
+            ctx.fillRect(x + 4, y + 3, 1, 1);
+            // line 4
+            ctx.fillRect(x + 3, y + 4, 1, 1);
+            // line 5
+            ctx.fillRect(x + 2, y + 5, 1, 1);
+            // line 6
+            ctx.fillRect(x + 2, y + 6, 1, 1);
+
+            // ctx.fillStyle = gray1;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray1; 
+
+            // line 7 - 13
+            ctx.moveTo(x + 1.5, y + 7);
+            ctx.lineTo(x + 1.5, y + 14);
+
+            ctx.stroke();
+
+            // line 14
+            ctx.fillRect(x + 2, y + 14, 1, 1);           
+            // line 15
+            ctx.fillRect(x + 2, y + 15, 1, 1);
+            // line 16
+            ctx.fillRect(x + 3, y + 16, 1, 1);
+
+            ctx.fillStyle = gray4;
+
+            // line 17
+            ctx.fillRect(x + 4, y + 17, 1, 1);  
+            // line 18
+            ctx.fillRect(x + 5, y + 18, 1, 1);   
+            ctx.fillRect(x + 6, y + 18, 1, 1);  
+            
+            ctx.stroke();
+        }
+
+        function drawButtonRightEdge(x, y) {
+            ctx.fillStyle = gray1;
+
+            // line 2
+            ctx.fillRect(x + 1, y + 2, 1, 1);
+            ctx.fillRect(x + 2, y + 2, 1, 1);
+            // line 3
+            ctx.fillRect(x + 3, y + 3, 1, 1);
+
+            ctx.stroke();
+
+            ctx.fillStyle = gray4;
+
+            // line 4
+            ctx.fillRect(x + 4, y + 4, 1, 1);
+            // line 5
+            ctx.fillRect(x + 5, y + 5, 1, 1);
+            // line 6
+            ctx.fillRect(x + 5, y + 6, 1, 1);
+ 
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gray4;
+
+            // line 7 - 13
+            ctx.moveTo(x + 6.5, y + 7);
+            ctx.lineTo(x + 6.5, y + 14);
+
+            ctx.stroke();
+
+            ctx.fillStyle = gray4;
+
+            // line 14
+            ctx.fillRect(x + 5, y + 14, 1, 1);           
+            // line 15
+            ctx.fillRect(x + 5, y + 15, 1, 1);
+            // line 16
+            ctx.fillRect(x + 4, y + 16, 1, 1);
+
+            // line 17
+            ctx.fillRect(x + 3, y + 17, 1, 1);  
+            // line 18
+            ctx.fillRect(x + 2, y + 18, 1, 1);   
+            ctx.fillRect(x + 1, y + 18, 1, 1); 
+            
+            ctx.stroke();
+        }
+
+      function drawMenuTitle(text, x, y) {
+            ctx.fillStyle = fontColor;
+            ctx.font = "9pt Lucida Grande"
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            ctx.fillText(text, x, y);
+        }
+
+        function drawText(text, x, y, color) {
+            ctx.fillStyle = color;
+            ctx.font = "9pt Lucida Grande"
+            ctx.textBaseline = "middle";
+            ctx.fillText(text, x, y);
+        }
+
+        function drawMenuButton(text, x, y, width, height) {
+            drawButton(x, y, width, height);
+            drawArrow(x + width - (15 + 4), y + 7);
+            drawText(text, x + 8, y + (height/2) + 1, fontColor);
+        }
+
+        function drawButton(x, y, width, height) {
+            // Edge is 6x19
+            // 
+            drawButtonLeftEdge(x, y); 
+            drawButtonRightEdge(x + width - 12, y);  
+            
+            drawLine(x + 7, y + 1.5, x + width - 12 + 1, y + 1.5, gray1);
+            drawLine(x + 7, y + 0.5 + height, x + width - 12 + 1, y + 0.5 + height, gray4);
+        }
+
+        function drawView(x, y, width, height) {
+            ctx.fillStyle = white;
+            ctx.fillRect(x + 0.5, y + 0.5, width, height);
+
+            ctx.strokeStyle = black;
+
+            ctx.lineWidth = 1;
+            ctx.rect(x + 0.5, y + 0.5, width, height);
+            ctx.stroke();            
+        }
+
+        drawFrame(10, 10, 600, 350, frameColor);
+        drawFrameBackground(10 + 1, 10 + 1, 600 - 2, 350 - 2, gray2);
+
+        drawAncors(10, 10, 600, 350);
+
+        drawView(10 + 5, 10 + 52, 600 - 10, 350 - (52 + 5));
+
+        drawSeparator(10, 10, 600, 350)
+
+        drawBox(10 + 15, 10 + 6, 15, 16);
+        drawArrow(25 + 4, 16 + 5);
+
+        const location1 = 10 + 9;
+        drawMenuButton("File", location1, 10 + 30, 53, 19); // File
+
+        const location2 = location1 + 6 + 53;
+        drawMenuButton("View", location2, 10 + 30, 61, 19); // View
+
+        const location3 = location2 + 6 + 61;
+        drawMenuButton("Edit", location3, 10 + 30, 55, 19); // Edit
+
+        const location4 = location3 + 6 + 55;
+        drawMenuButton("Props", location4, 10 + 30, 65, 19); // Props
+        
+        const location5 = location4 + 6 + 65;
+        drawMenuButton("Goto", location5, 10 + 30, 62, 19); // Goto
+
+        drawMenuTitle("File Manager V3 :/home/sun4/nathan", 10 + 300, 10 + 14);
+
+    </script>
+</body>
+
+<script>
+
+</script>
+
+</html>
